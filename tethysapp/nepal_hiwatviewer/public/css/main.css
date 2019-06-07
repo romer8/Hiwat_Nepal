@@ -1,0 +1,170 @@
+.tab-content > .tab-pane,
+.pill-content > .pill-pane {
+  display: block;
+  height: 0;
+  overflow-y: hidden;
+}
+
+.tab-content > .active,
+.pill-content > .active {
+  height: auto;
+}
+
+#headerCustomButtons {
+    margin-right: 15px;
+    margin-left: 15px;
+    width: 800px
+}
+#app-content-wrapper #app-content{
+    height: 100%;
+    /*padding-top: 60px;*/
+    /*padding-bottom: 50px;*/
+}
+
+#inner-app-content{
+    padding: 0;
+}
+
+#app-actions {
+    display: none;
+}
+
+#showMapView {
+    height: 100%;
+}
+
+#graph {
+    height: 100%;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.chart {
+    min-width: 320px;
+    max-width: 800px;
+    height: 220px;
+    margin: 0 auto;
+}
+
+.flex-container-row {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.logos {
+    width: 40%;
+    padding: 0 5px 0 5px;
+}
+
+#about .modal-dialog {
+  width: 75%;
+  height: 75%;
+  padding: 0;
+}
+#about .modal-body {
+  height: 100%;
+  border-radius: 0;
+}
+
+#graph .modal-dialog {
+  width: 75%;
+  height: 75%;
+  padding: 0;
+}
+
+#graph .modal-body {
+  height: 100%;
+  border-radius: 0;
+}
+
+span.caption {
+    font-size: 80%;
+}
+
+p.project {
+    font-size: 70%;
+}
+
+p.author {
+    font-size: 85%;
+}
+
+.hidden {
+  display: none;
+}
+
+#logos {
+padding: 5px 0;
+white-space: nowrap;
+width: 100%;
+display: table;
+}
+
+.logo-image {
+vertical-align: middle;
+display: table-cell;
+padding: 0 2px;
+margin-right:20%;
+width:100%
+}
+
+.logo-image2 {
+vertical-align: middle;
+display: table-cell;
+padding: 0 2px;
+width:50%;
+}
+
+.logo-image img {
+max-width: 40%;
+margin-right:60%;
+
+}
+.logo-image2 img {
+max-width: 20%;
+margin-left:70%;
+
+}
+
+.modal-titile{
+font-size:130%;
+}
+#about .modal-dialog {
+width: 75%;
+height: 75%;
+padding: 0;
+}
+#about .modal-body {
+height: 100%;
+border-radius: 0;
+}
+
+
+#map-view-legend {
+bottom: 50px;
+/*right: 20px;*/
+width: 280px;
+max-height: 100%;
+overflow-y: auto;
+margin: 5px;
+color:white;
+background-color: #80ced6;
+border: 1px #ddd solid;
+z-index: 999;
+}
+
+.info {
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: black;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    width:120px;
+    height:270px;
+}
+
+

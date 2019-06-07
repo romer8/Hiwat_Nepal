@@ -1,0 +1,223 @@
+{% extends "nepal_hiwatviewer/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+{% csrf_token %}
+{% load static %}
+{% block import_gizmos %}
+    {% import_gizmo_dependency plotly_view %}
+{% endblock %}
+
+{% block header_buttons %}
+  <!--<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="View Graph">-->
+    <!--<a data-toggle="modal" data-target="#graph"><span class="glyphicon glyphicon-globe"></span></a>-->
+  <!--</div>-->
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#about"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+{% endblock %}
+
+{% block app_navigation_items %}
+    <br>
+    <label>
+        HIWAT Data Raster
+    </label>
+    <P>Check the box to display the hourly/ assembly HIWAT data associated with the streams </P>
+    <div id="activateRaster" class="'RasterControl">
+        <li><input id="chkRaster" type="checkbox" value="Raster" ><label for="chkRaster">Raster</label></li>
+    </div>
+
+    <!--<br>-->
+    <div id="rasterOptions"class="rastersOptionClass" hidden>
+        <label>
+            Select a Interval Type
+        </label>
+        <select class="interval_table" name="interval_table" id="interval_table" style="width: 100%">
+            <option value="det">Deterministic</option>
+            <option value="hourly">Ensemble Hourly</option>
+        </select>
+        <br><br>
+        <label>
+            Select a Variable
+        </label>
+        <select class="var_table" name="var_table" id="var_table" style="width: 100%">
+
+        </select>
+
+        <br><br>
+        <b>Coordinates</b>
+        <div id="mouse-position" class="well well-sm"></div>
+        <label id="opacity-label" >Curent Opacity:&nbsp</label><span id="opacity" readonly style="border:0; color: #000000; font-weight:normal;"></span>
+        <div style="width:90%;left:5px;" id="opacity-slider"></div>
+        <br>
+        <div class="error"></div>
+        <b>Legend</b>
+        <div id="legend" class="info legend"></div>
+        <!--<div align="right"><canvas id="cv" width="200px" height="650px"></canvas></div>-->
+        <div id="metadata" style="display: none" data-thredds-urls="{{thredds_urls}}" data-var-options="{{var_options}}" data-hourly-options="{{hourly_options}}" data-det-options="{{det_options}}" data-wms-url="{{geoserver_wms_url}}"></div>
+        <input type="text" name="point-lat-lon" id="point-lat-lon" hidden>
+        <input type="text" name="poly-lat-lon" id="poly-lat-lon" hidden>
+        <input type="text" name="shp-lat-lon" id="shp-lat-lon" hidden>
+    </div>
+     <label>
+        Nepal Provinces
+    </label>
+    <P>Check the box to display the provinces of Nepal </P>
+    <div id="activateProvince" class="ProvinceControl">
+        <li><input id="chkProvince" type="checkbox" value="Province" ><label for="chkProvince">Display provinces</label></li>
+    </div>
+
+    </br>
+{% endblock %}
+
+{% block app_content %}
+  <input type="hidden" id="preLoadNotTrans" name="not_trans_boundary" value="{{myJson}}">
+  <div id="showMapView" style="height: 100%, width: 100%"></div>
+    <div id="map-view-legend" class="map-view-legend ol-unselectable ol-control">
+        <div>
+            <svg width="20" height="20" viewPort="0 0 20 20" version="1.1"
+                xmlns="http://www.w3.org/2000/svg">
+                <polyline points="19 1, 1 6, 19 14, 1 19" stroke="#0000FF" fill="transparent" stroke-width="2"/>
+            </svg>
+            None Trans-Boundary Streams
+        </div>
+    </div>
+
+    <script>
+        $(function(){
+            $("#about").modal('show');
+        });
+    </script>
+{% endblock %}
+
+{# Use the after_app_content block for modals #}
+{% block after_app_content %}
+  <!----Simulated Data ----->
+  <div class="modal fade" id="graph" tabindex="-1" role="dialog" aria-labelledby="about-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <div class="row">
+            <div id="stream-info" class="col-md-8"></div>
+            <div class="col-md-4">
+              <div align="right">
+                <img class="logos" src="{% static 'nepal_hiwatviewer/images/byu_logo.png' %}">
+                <img class="logos" src="{% static 'nepal_hiwatviewer/images/servir_logo.png' %}">
+              </div>
+            </div>
+            <div id="interaction"></div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a id="hiwat_tab_link" href="#hiwat" aria-controls="hiwat" role="tab" data-toggle="tab">Hiwat</a></li>
+            <li role="presentation"><a id="historic_tab_link" href="#historic" aria-controls="historic" role="tab" data-toggle="tab">Historic Simulation</a></li>
+            <li role="presentation"><a href="#download_data" aria-controls="download_data" role="tab" data-toggle="tab">Download</a></li>
+          </ul>
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="hiwat">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                   <div id="dates" class="hidden form-group" style="padding: 30px 30px 20px 0">
+                     <select id="datesSelect" class="form-control"></select>
+                   </div>
+                   <div class="flex-container-row"><img id="hiwat-loading" class="view-file hidden" src="{% static 'hydroviewer_hiwat/images/loader.gif' %}" /></div>
+
+                  <div id="hiwat-chart"></div>
+                </div>
+              </div>
+           </div>
+           <div role="tabpanel" class="tab-pane" id="historic">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <div class="flex-container-row"><img id="historic-loading" class="view-file hidden" src="{% static 'hydroviewer_hiwat/images/loader.gif' %}" /></div>
+                  <div id="historic-chart"></div>
+                </div>
+              </div>
+           </div>
+           <div role="tabpanel" class="tab-pane" id="download_data">
+             <div class="panel panel-default">
+               <div class="panel-body">
+                 <h6>Download Hiwat Forecast</h6>
+                 <div id="download_hiwat" class="btn-group long-term-select" role="group">
+                   <a class="btn btn-success" role="button" id="submit-download-hiwat">
+                    <span class="glyphicon glyphicon-play"></span> Hiwat Forecast
+                   </a>
+                 </div>
+                 <h6>Download Historic Simulation</h6>
+                 <div id="download_historic" class="btn-group long-term-select" role="group">
+                   <a class="btn btn-info" role="button" id="submit-download-historic">
+                    <span class="glyphicon glyphicon-play"></span> Historic Simulation
+                   </a>
+                 </div>
+               </div>
+             </div>
+           </div>
+          </div>
+        </div>
+        <div id="info" class="hidden"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Example Modal -->
+  <!--<div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="help-modal-label">-->
+  <div class="modal fade" id="about" tabindex="-1" role="dialog" aria-labelledby="about-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <!--<h5 class="modal-title" id="help-modal-label">Example Modal</h5>-->
+          <h5 class="modal-title" id="about-modal-label">Nepal Hidroviewer Hiwat</h5>
+        </div>
+        <div class="modal-body">
+          <p id="overview">
+              <b>
+              This is a web application was created to allow users to visualize results from the Hiwat
+              ( High-Impact Weather Assesment Toolkit ) model. The application displays only results
+              from rivers that are not transboundary. The app also provides historical data, and the ability to download the forecast and historical data.
+             </b>
+          </p>
+            <h3>How it works</h3>
+            <h6>1. Click on the settings icon. </h6>
+            <h6>2. Configure the path for the forecast data to be displayed.</h6>
+            <h6>3. Configure the path for the historical data to be displayed.</h6>
+            <h6>4. Configure the path for the return period data to be displayed.</h6>
+            <h6>5. Choose a river and click on it. The special identifier of the river will be selected.</h6>
+            <h6>6. The active tab is Forecast data, put the cursor on the graph to see the corresponding values.</h6>
+            <h6>7. Click on the historical data to display the data and teh return periods associated to the river.</h6>
+            <h6>8. Once you finished displaying the results, click on any of the options to download the desired data.</h6>
+            <h6>9. Click the close button to exit the application.</h6>
+            <h5>Additional Resources: </h5>
+            <!--<p><a href="https://www.ecmwf.int/en/about/what-we-do/global-forecasts" target="_blank">ECMWF Global Forecasts</a></p>-->
+            <p><a href="http://rapid-hub.org/" target="_blank">RAPID River Routing Model</a></p>
+            <!--<p><a href="https://streamflow-prediction-tool.readthedocs.io/en/latest/" target="_blank">StreamFlow Prediction Tool</a></p>-->
+            <p><a href="https://tethys.servirglobal.net/apps/" target="_blank">About SERVIR-Tethys</a></p>
+            <p><a href="https://servirglobal.net/Privacy-Terms-of-Use" target="_blank">Privacy and Terms of Use</a></p>
+          <!--<p>You can add custom buttons to the app header using the <code>header_buttons</code> block. Use anchor/link tags for the button and wrap it in a div with the class <code>header-button</code>. For buttons with the gliphyicons, add the <code>glyphicon-button</code> class as well.</p>-->
+          <!--<p>Ever have trouble using a modal in a Tethys app? Use the <code>after_app_content</code> block for modal content to allow them to function properly. See: <a href="https://getbootstrap.com/javascript/#modals">Bootstrap Modals</a></p>-->
+          <!--<p>Add tooltips to any element by adding the <code>data-toggle</code>, <code>data-placement</code>, and <code>title</code> attributes to the button. See: <a href="https://getbootstrap.com/javascript/#tooltips">Bootstrap Tooltips</a></p>-->
+        </div>
+        <div class="modal-footer">
+          <div align="center" id="logos">
+
+              <div class="logo-image2">
+                  <a href="http://worldwater.byu.edu/apps" target="_blank"><img src="{% static 'hydroviewer_hiwat/images/byu_logo.png' %}"></a>
+              </div>
+              <div class="logo-image"><a href="https://servirglobal.net/about-servir" target="_blank"><img src="{% static 'hydroviewer_hiwat/images/servir_logo.png' %}"></a></div>
+
+          </div>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <!--<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>-->
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block app_actions %}
+{% endblock %}

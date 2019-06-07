@@ -1,0 +1,40 @@
+Var|Category|Display_name|units|min|max|start|end
+enspmm-prec1h|hourly|1-hour accumulated Preciptation|mm|1|50|green|red
+enspmm-prectot|hourly|Total Accumulated Preciptation|mm|1|200|green|red
+enspmm-refc|hourly|Composite Reflectivity|dBz|5|70|blue|red
+ensprob-lfa-max-thresh0.07|hourly|Prob. of Lightning|%|10|100|yellow|red
+ensprob-lfa-max-thresh5|hourly|Prob. of Frequent Lightning|%|10|100|yellow|red
+ensprob-refc-thresh50|hourly|Prob. of Reflectivity>50 dBz|%|10|100|blue|red
+ensprob-spd10m-thresh40|hourly|Prob. of Winds>40kts|%|10|100|blue|red
+ensprob-spd10m-thresh50|hourly|Prob. of Winds>50kts|%|10|100|blue|red
+ensprob-tcolg-thresh30|hourly|Prob. of Moderate Hail Threat|%|10|100|blue|red
+ensprob-tcolg-thresh40|hourly|Prob. of High Hail Threat|%|10|100|blue|red
+ensprob-uphlcy25-thresh100|hourly|Prob. of Moderate Supercell Threat|%|10|100|blue|red
+ensprob-uphlcy25-thresh200|hourly|Prob. of High Supercell Threat|%|10|100|blue|red
+DPT_2maboveground|det|Dew Point Temperature|C|-27|45|blue|red
+TMP_2maboveground|det|Temperature|C|-27|45|blue|red
+APCP_surface|det|Total Precipitation|mm|1|200|green|red
+CAPE_surface|det|CAPE|J/kg|100|5000|blue|red
+HLCY_0M3000maboveground|det|0-3 km SRH|m^2/s^2|50|700|blue|red
+PWAT_entireatmosphere|det|Precipitable Water|mm|2.5|70|red|blue
+WIND_10maboveground|det|10m Wind Speed|knots|5|50|blue|red
+WIND_250mb|det|250 m Wind Speed|knots|20|150|blue|red
+PCP|det|Hourly Precipitation|mm|1|50|green|red
+Prob_lfa_thresh5|day1|Prob. of Frequent Lightning|%|10|100|yellow|red
+Prob_precip_thresh50|day1|Prob. of Intense Precipitation|%|10|100|blue|red
+Prob_refc_thresh50|day1|Prob. of Reflectivity>50 dBz|%|10|100.0|blue|red
+Prob_spd10m_thresh40|day1|Prob. of Winds>40kts|%|10|100.0|blue|red
+Prob_spd10m_thresh50|day1|Prob. of Winds>50kts|%|10|100|blue|red
+Prob_tcolg_thresh30|day1|Prob. of Moderate Hail Threat|%|10|100|blue|red
+Prob_tcolg_thresh40|day1|Prob. of High Hail Threat|%|10|100|blue|red
+Prob_uphlcy_thresh100|day1|Prob. of Moderate Supercell Threat|%|10|100|blue|red
+Prob_uphlcy_thresh200|day1|Prob. of High Supercell Threat|%|10|100|blue|red
+Prob_lfa_thresh5|day2|Prob. of Frequent Lightning|%|10|100|yellow|red
+Prob_precip_thresh50|day2|Prob. of Intense Precipitation|%|10|100|blue|red
+Prob_refc_thresh50|day2|Prob. of Reflectivity>50 dBz|%|10|100.0|blue|red
+Prob_spd10m_thresh40|day2|Prob. of Winds>40kts|%|10|100.0|blue|red
+Prob_spd10m_thresh50|day2|Prob. of Winds>50kts|%|10|100|blue|red
+Prob_tcolg_thresh30|day2|Prob. of Moderate Hail Threat|%|10|100|blue|red
+Prob_tcolg_thresh40|day2|Prob. of High Hail Threat|%|10|100|blue|red
+Prob_uphlcy_thresh100|day2|Prob. of Moderate Supercell Threat|%|10|100|blue|red
+Prob_uphlcy_thresh200|day2|Prob. of High Supercell Threat|%|10|100|blue|red
