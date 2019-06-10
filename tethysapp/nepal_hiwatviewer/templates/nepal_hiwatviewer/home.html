@@ -60,6 +60,68 @@
     </div>
      <label>
         Nepal Provinces
+    {% extends "nepal_hiwatviewer/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+{% csrf_token %}
+{% load static %}
+{% block import_gizmos %}
+    {% import_gizmo_dependency plotly_view %}
+{% endblock %}
+
+{% block header_buttons %}
+  <!--<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="View Graph">-->
+    <!--<a data-toggle="modal" data-target="#graph"><span class="glyphicon glyphicon-globe"></span></a>-->
+  <!--</div>-->
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#about"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+{% endblock %}
+
+{% block app_navigation_items %}
+    <br>
+    <label>
+        HIWAT Data Raster
+    </label>
+    <P>Check the box to display the hourly/ assembly HIWAT data associated with the streams </P>
+    <div id="activateRaster" class="'RasterControl">
+        <li><input id="chkRaster" type="checkbox" value="Raster" ><label for="chkRaster">Raster</label></li>
+    </div>
+
+    <!--<br>-->
+    <div id="rasterOptions"class="rastersOptionClass" hidden>
+        <label>
+            Select a Interval Type
+        </label>
+        <select class="interval_table" name="interval_table" id="interval_table" style="width: 100%">
+            <option value="det">Deterministic</option>
+            <option value="hourly">Ensemble Hourly</option>
+        </select>
+        <br><br>
+        <label>
+            Select a Variable
+        </label>
+        <select class="var_table" name="var_table" id="var_table" style="width: 100%">
+
+        </select>
+
+        <br><br>
+        <b>Coordinates</b>
+        <div id="mouse-position" class="well well-sm"></div>
+        <label id="opacity-label" >Curent Opacity:&nbsp</label><span id="opacity" readonly style="border:0; color: #000000; font-weight:normal;"></span>
+        <div style="width:90%;left:5px;" id="opacity-slider"></div>
+        <br>
+        <div class="error"></div>
+        <b>Legend</b>
+        <div id="legend" class="info legend"></div>
+        <!--<div align="right"><canvas id="cv" width="200px" height="650px"></canvas></div>-->
+        <div id="metadata" style="display: none" data-thredds-urls="{{thredds_urls}}" data-var-options="{{var_options}}" data-hourly-options="{{hourly_options}}" data-det-options="{{det_options}}" data-wms-url="{{geoserver_wms_url}}"></div>
+        <input type="text" name="point-lat-lon" id="point-lat-lon" hidden>
+        <input type="text" name="poly-lat-lon" id="poly-lat-lon" hidden>
+        <input type="text" name="shp-lat-lon" id="shp-lat-lon" hidden>
+    </div>
+     <label>
+        Nepal Provinces
     </label>
     <P>Check the box to display the provinces of Nepal </P>
     <div id="activateProvince" class="ProvinceControl">
@@ -187,13 +249,19 @@
             <h6>2. Configure the path for the forecast data to be displayed.</h6>
             <h6>3. Configure the path for the historical data to be displayed.</h6>
             <h6>4. Configure the path for the return period data to be displayed.</h6>
-            <h6>5. Choose a river and click on it. The special identifier of the river will be selected.</h6>
-            <h6>6. The active tab is Forecast data, put the cursor on the graph to see the corresponding values.</h6>
-            <h6>7. Click on the historical data to display the data and teh return periods associated to the river.</h6>
-            <h6>8. Once you finished displaying the results, click on any of the options to download the desired data.</h6>
-            <h6>9. Click the close button to exit the application.</h6>
+            <h6>5. Check the Raster box if you want to display the HIWAT Raster data associated with Nepal</h6>
+            <h6>6.Select between the deterministic and hourly model for the data you want to display</h6>
+            <h6>7.Select between the variables e.g (total precipitation mm)</h6>
+            <h6>8. Check the box to display the provinces of Nepal if needed</h6>
+            <h6>9. Choose a river and click on it. The special identifier of the river will be selected.</h6>
+            <h6>10. The active tab is Forecast data, put the cursor on the graph to see the corresponding values.</h6>
+            <h6>11. Click on the historical data to display the data and teh return periods associated to the river.</h6>
+            <h6>12. Once you finished displaying the results, click on any of the options to download the desired data.</h6>
+            <h6>13. Once you finished, a popup will be displayed with the name of the river</h6>
+            <h6>14. Click the close button to exit the application.</h6>
             <h5>Additional Resources: </h5>
             <!--<p><a href="https://www.ecmwf.int/en/about/what-we-do/global-forecasts" target="_blank">ECMWF Global Forecasts</a></p>-->
+            <p><a href="https://github.com/romer8/Hiwat_Nepal" target="_blank">Nepal Hiwat Viewer Github Repository</a></p>
             <p><a href="http://rapid-hub.org/" target="_blank">RAPID River Routing Model</a></p>
             <!--<p><a href="https://streamflow-prediction-tool.readthedocs.io/en/latest/" target="_blank">StreamFlow Prediction Tool</a></p>-->
             <p><a href="https://tethys.servirglobal.net/apps/" target="_blank">About SERVIR-Tethys</a></p>
@@ -206,9 +274,9 @@
           <div align="center" id="logos">
 
               <div class="logo-image2">
-                  <a href="http://worldwater.byu.edu/apps" target="_blank"><img src="{% static 'hydroviewer_hiwat/images/byu_logo.png' %}"></a>
+                  <a href="http://worldwater.byu.edu/apps" target="_blank"><img src="{% static 'nepal_hiwatviewer/images/byu_logo.png' %}"></a>
               </div>
-              <div class="logo-image"><a href="https://servirglobal.net/about-servir" target="_blank"><img src="{% static 'hydroviewer_hiwat/images/servir_logo.png' %}"></a></div>
+              <div class="logo-image"><a href="https://servirglobal.net/about-servir" target="_blank"><img src="{% static 'nepal_hiwatviewer/images/servir_logo.png' %}"></a></div>
 
           </div>
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
