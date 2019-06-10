@@ -1,5 +1,8 @@
+// THIS IS AN EXTENSION TO THE PLUGIN LEAFTLET.WMS.JS//
+//ENJOY
+
 L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
-  
+  // THIS FUNCTIONS ACTIVATES WHEN ADDING A NEW LAYER
   onAdd: function (map) {
     // Triggered when the layer is added to a map.
     //   Register a click listener, then do all the upstream WMS things
@@ -8,13 +11,13 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
     map.on('mousemove',this.getFeatureInfoMove, this);
   },
 
+  // THIS FUNCTIONS HELPS TO CHANGE THE CURSOR TO A POINTER WHEN HOVERING ON THE WMS LAYER
   getFeatureInfoMove: function (evt){
 
     if (evt.drag) {
      return;
     }
     var coordinatesMap=evt.latlng;
-//    console.log(coordinatesMap.lat);
     var changeCursor=false;
     var url = this.getFeatureInfoUrl(evt.latlng),
         showResults = L.Util.bind(this.showGetFeatureInfo, this);
@@ -27,18 +30,12 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
           success: function (data, status, xhr) {
               var err = typeof data === 'object' ? null : data;
               features=data["features"][0];
-//              riverName=features["properties"]["riv_name"];
-//                  $("#stream-info").append('<h3 id="riverName">River Name: '
-//                  + riverName
-//                  + '</h5><h5 id="COMID">COMID: '+ comid + '</h5>');
-////              showResults(err, evt.latlng, riverName);
 
               if(typeof features !='undefined'){
                  changeCursor=true;
                  document.getElementById('showMapView').style.cursor='pointer';
               }
               else{
-//                console.log('the mouse is outside the map :(');
                 changeCursor=false;
                 document.getElementById('showMapView').style.cursor='';
               }
@@ -56,7 +53,8 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
     }
 
   },
-  
+
+  //THIS FUNCTION ACTIVATES WHEN REMOVING A LAYER
   onRemove: function (map) {
     // Triggered when the layer is removed from a map.
     //   Unregister a click listener, then do all the upstream WMS things
@@ -65,7 +63,8 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
     map.off('click', this.getFeatureInfo, this);
     map.off('mousemove', this.getFeatureInfoMove, this);
   },
-  
+
+  //THIS FUNCTION ACTIVATES WHEN THERE IS A CLICK ON THE WMS LAYER
   getFeatureInfo: function (evt) {
     if(document.getElementById('showMapView').style.cursor=='pointer'){
         // Make an AJAX request to the server and hope for the best
@@ -82,14 +81,12 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
             $('#download_hiwat').addClass('hidden');
             $('#download_historical').addClass('hidden');
             console.log('the url is correct');
-    //    if(url){
             $.ajax({
               type:"GET",
               url: url,
               dataType:'json',
               success: function (data, status, xhr) {
                   var err = typeof data === 'object' ? null : data;
-//                  showResults(err,data);
 
 
                   comid = data["features"][0]["properties"]["comid"];
@@ -140,7 +137,8 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
         }
     }
   },
-  
+
+  //THIS FUNCTION GIVES YOU THE URL OF THE WMS SERVICE
   getFeatureInfoUrl: function (latlng) {
     // Construct a GetFeatureInfo request URL given a point
     var point = this._map.latLngToContainerPoint(latlng, this._map.getZoom()),
@@ -160,7 +158,6 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
           layers: this.wmsParams.layers,
           query_layers: this.wmsParams.layers,
           info_format: 'application/json'
-//          info_format: 'text/html'
         };
     
     params[params.version === '1.3.0' ? 'i' : 'x'] = point.x;
@@ -168,27 +165,20 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
 
     return this._url + L.Util.getParamString(params, this._url, true);
   },
-  
+
+  // THIS FUNCTION ACTIVATES A POPUP
   showGetFeatureInfo: function (err, latlng, content) {
-//  showGetFeatureInfo: function (err, content) {
     if (err) { console.log(err);
 
     return; } // do nothing if there's an error
     console.log('popup');
-    // Otherwise show the content in a popup, or something.
-//    if(content.match(/[a-z]/i)){
-        console.log(content);
-        L.popup({ maxWidth:2000 })
-          .setLatLng(latlng)
-          .setContent(content)
-          .openOn(this._map);
-//    }
-//    else {
-//        L.popup({ maxWidth:2000 })
-//          .setLatLng(latlng)
-//          .setContent("No river name available")
-//          .openOn(this._map);
-//    }
+
+    console.log(content);
+    L.popup({ maxWidth:2000 })
+     .setLatLng(latlng)
+     .setContent("River Name: "+ content)
+     .openOn(this._map);
+
   }
 });
 

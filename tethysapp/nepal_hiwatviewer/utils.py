@@ -1,200 +1,13 @@
 import datetime
-from collections import defaultdict,OrderedDict
-import json
-import operator
-import os, tempfile, shutil,functools
+import os
 import requests
-import csv
-import json
-import calendar
-import time
-import netCDF4
-from netCDF4 import Dataset
+
 from config import *
 import numpy as np
-import shapely.geometry
-import webcolors
-import cPickle
+
 import xml.etree.ElementTree as ET
 
-# cf = open(COLORS_PICKLE,'rb')
-# cPick = cPickle.load(cf)
-# cf.close()
-#
-# cl1 = [[0.0000, 0.9255, 0.9255],[0.0039, 0.6275, 0.9647],[0.0000, 0.0000, 0.9647],[0.0000, 1.0000, 0.0000],[0.0000, 0.7843, 0.0000],[0.0000, 0.5647, 0.0000],[1.0000, 1.0000, 0.0000],[0.9059, 0.7529, 0.0000],[1.0000, 0.5647, 0.0000],[1.0000, 0.0000, 0.0000],[0.8392, 0.0000, 0.0000],[0.7529, 0.0000, 0.0000],[1.0000, 0.0000, 1.0000],[0.6000, 0.3333, 0.7882]]
-#
-# c = {}
-# for color in cPick:
-#     hex = webcolors.rgb_to_hex((int(cPick[color][0]*255),int(cPick[color][1]*255),int(cPick[color][2]*255)))
-#     c[color] = hex
-#
-# i = 1
-# for color in cl1:
-#     hex = webcolors.rgb_to_hex((int(color[0] * 255), int(color[1] * 255), int(color[2] * 255)))
-#     keygen = str(i)
-#     c[keygen] = hex
-#     i+=1
-
-def get_pt_values(s_var,geom_data,interval):
-
-    #Empty list to store the timeseries values
-    ts_plot = []
-
-    json_obj = {}
-
-    #Defining the lat and lon from the coords string
-    coords = geom_data.split(',')
-    stn_lat = float(coords[1])
-    stn_lon = float(coords[0])
-
-
-
-    nc_files = get_hiwat_file()
-
-    nc_file = nc_files[interval]
-
-    # if interval == 'det':
-    #     nc_file = HIWAT_DET
-    # if interval == 'hourly':
-    #     nc_file = HIWAT_HOURLY
-    # if interval == 'day1':
-    #     nc_file = HIWAT_DAY1
-    # if interval == 'day2':
-    #     nc_file = HIWAT_DAY2
-
-    nc_fid = Dataset(nc_file, 'r') #Reading the netCDF file
-    lis_var = nc_fid.variables
-    lats = nc_fid.variables['latitude'][:]  #Defining the latitude array
-    lons = nc_fid.variables['longitude'][:] #Defining the longitude array
-    field = nc_fid.variables[s_var][:]   #Defning the variable array
-    time = nc_fid.variables['time'][:]
-
-    abslat = np.abs(lats - stn_lat) #Finding the absolute latitude
-    abslon = np.abs(lons - stn_lon) #Finding the absolute longitude
-    
-    lat_idx = (abslat.argmin())
-    lon_idx = (abslon.argmin())
-
-    if interval == 'det':
-        for timestep, v in enumerate(time):
-            val = field[timestep, lat_idx, lon_idx]
-            time_stamp = time[timestep] * 1000
-            ts_plot.append([time_stamp,float(val)])
-            ts_plot.sort()
-
-    if interval == 'hourly':
-        for timestep, v in enumerate(time):
-            val = field[timestep, lat_idx, lon_idx]
-            dt_str = netCDF4.num2date(lis_var['time'][timestep], units=lis_var['time'].units,
-                                      calendar=lis_var['time'].calendar)
-            # dt_str = datetime.datetime.strftime(dt_str, '%Y_%m_%d_%H_%M')
-            time_stamp = calendar.timegm(dt_str.utctimetuple()) * 1000
-            # time_stamp = time[timestep] * 1000
-            ts_plot.append([time_stamp,float(val)])
-            ts_plot.sort()
-
-    if interval == 'day1' or interval == 'day2':
-        val = field[0, lat_idx, lon_idx]
-        dt_str = netCDF4.num2date(lis_var['time'][0], units=lis_var['time'].units,
-                                  calendar=lis_var['time'].calendar)
-        # dt_str = datetime.datetime.strftime(dt_str, '%Y_%m_%d_%H_%M')
-        time_stamp = calendar.timegm(dt_str.utctimetuple()) * 1000
-        ts_plot.append([time_stamp, float(val)])
-        ts_plot.sort()
-
-    # Returning the list with the timeseries values and the point so that they can be displayed on the graph.
-    point = [round(stn_lat,2),round(stn_lon,2)]
-    json_obj["plot"] = ts_plot
-    json_obj["geom"] = point
-
-    return json_obj
-
-
-def get_poylgon_values(s_var, geom_data, interval):
-    # Empty list to store the timeseries values
-    ts_plot = []
-
-    json_obj = {}
-
-    # Defining the lat and lon from the coords string
-    poly_geojson = json.loads(geom_data)
-    shape_obj = shapely.geometry.asShape(poly_geojson)
-    bounds = shape_obj.bounds
-
-    miny = float(bounds[1])
-    minx = float(bounds[0])
-    maxx = float(bounds[2])
-    maxy = float(bounds[3])
-
-    nc_files = get_hiwat_file()
-
-    nc_file = nc_files[interval]
-
-    # if interval == 'det':
-    #     nc_file = HIWAT_DET
-    # if interval == 'hourly':
-    #     nc_file = HIWAT_HOURLY
-    # if interval == 'day1':
-    #     nc_file = HIWAT_DAY1
-    # if interval == 'day2':
-    #     nc_file = HIWAT_DAY2
-    #
-    nc_fid = Dataset(nc_file, 'r')  # Reading the netCDF file
-    lis_var = nc_fid.variables
-    lats = nc_fid.variables['latitude'][:]  # Defining the latitude array
-    lons = nc_fid.variables['longitude'][:]  # Defining the longitude array
-    field = nc_fid.variables[s_var][:]  # Defning the variable array
-    time = nc_fid.variables['time'][:]
-    abslat = np.abs(lats - miny)
-    abslon = np.abs(lons - minx)
-    abslat2 = np.abs(lats - maxy)
-    abslon2 = np.abs(lons - maxx)
-    lon_idx = (abslat.argmin())
-    lat_idx = (abslon.argmin())
-    lon2_idx = (abslat2.argmin())
-    lat2_idx = (abslon2.argmin())
-    #
-    # lat_idx = (abslat.argmin())
-    # lon_idx = (abslon.argmin())
-    #
-    if interval == 'det':
-        for timestep, v in enumerate(time):
-            vals = field[timestep,lat_idx:lat2_idx, lon_idx:lon2_idx]
-            val = np.mean(vals)
-            time_stamp = time[timestep] * 1000
-            ts_plot.append([time_stamp, float(val)])
-            ts_plot.sort()
-
-    if interval == 'hourly':
-        for timestep, v in enumerate(time):
-            vals = field[timestep, lat_idx:lat2_idx, lon_idx:lon2_idx]
-            val = np.mean(vals)
-            dt_str = netCDF4.num2date(lis_var['time'][timestep], units=lis_var['time'].units,
-                                      calendar=lis_var['time'].calendar)
-            # dt_str = datetime.datetime.strftime(dt_str, '%Y_%m_%d_%H_%M')
-            time_stamp = calendar.timegm(dt_str.utctimetuple()) * 1000
-            # time_stamp = time[timestep] * 1000
-            ts_plot.append([time_stamp, float(val)])
-            ts_plot.sort()
-
-    if interval == 'day1' or interval == 'day2':
-        vals = field[0, lat_idx:lat2_idx, lon_idx:lon2_idx]
-        val = np.mean(vals)
-        dt_str = netCDF4.num2date(lis_var['time'][0], units=lis_var['time'].units,
-                                  calendar=lis_var['time'].calendar)
-        # dt_str = datetime.datetime.strftime(dt_str, '%Y_%m_%d_%H_%M')
-        time_stamp = calendar.timegm(dt_str.utctimetuple()) * 1000
-        ts_plot.append([time_stamp, float(val)])
-        ts_plot.sort()
-
-    geom = [round(minx,2),round(miny,2),round(maxx,2),round(maxy,2)]
-
-    json_obj["plot"] = ts_plot
-    json_obj["geom"] = geom
-
-    return json_obj
-
-# get_pt_values('TMP_2maboveground','91.1,20.7')
+# GENERATE THE DATA VARIABLS ASSOCIATED WITH THE RASTER MAP
 def generate_variables_meta():
     print('entering generate_variables')
     db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'public/data/var_info.txt')
@@ -255,11 +68,11 @@ def generate_variables_meta():
 
 
     # print var_issues
-   # print('printing the variable list')
+    # print('printing the variable list')
     #print(variable_list)
     return variable_list
 
-
+#GENERATE THE COLORS ASSOCIATED WITH THE RASTER ANIMATION FOR THE GIVEN VARIABLE
 def retrieve_colors(field):
     fillcols = None
 
@@ -332,6 +145,7 @@ def retrieve_colors(field):
     # print color_str
     return fillcols
 
+#CALCULATE THE MAX RANGE FOR THE COLORS OF THE ANIMATION
 def calc_color_range(min,max,classes):
     # breaks = None
 
@@ -349,6 +163,7 @@ def calc_color_range(min,max,classes):
 
     return scale
 
+# GET THE INFORMATION FROM THE TREDDS SERVER ASSOCIATED WITH ALL THE VARIABLES
 def get_thredds_info():
     catalog_url = THREDDS_catalog
 
@@ -410,29 +225,7 @@ def get_thredds_info():
     print('*********************')
     return urls_obj
 
-# def get_hiwat_file():
-#
-#     hiwat_files = {}
-#
-#     for dir in os.listdir(HIWAT_storage):
-#         if 'WRF' in dir:
-#             WRF = os.path.join(HIWAT_storage, dir)
-#             for store in os.listdir(WRF):
-#                 if 'servir_hkh' in store:
-#                     hiwat_dir = os.path.join(HIWAT_storage,dir)
-#                     latest_dir = max([os.path.join(hiwat_dir, d) for d in os.listdir(hiwat_dir)], key=os.path.getmtime)
-#                     for file in os.listdir(latest_dir):
-#                         if 'hourly' in file:
-#                             hiwat_files['hourly'] = os.path.join(latest_dir,file)
-#                         if 'Control' in file:
-#                             hiwat_files['det'] = os.path.join(latest_dir,file)
-#                         if 'day1' in file:
-#                             hiwat_files['day1'] = os.path.join(latest_dir,file)
-#                         if 'day2' in file:
-#                             hiwat_files['day2'] = os.path.join(latest_dir,file)
-#
-#     return hiwat_files
-
+##GET THE HIWAT DATA SAVED ON THE HIWAT FILE PATH
 def get_hiwat_file():
 
     hiwat_files = {}

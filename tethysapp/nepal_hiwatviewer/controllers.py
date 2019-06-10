@@ -1,4 +1,4 @@
-#################CONTROLER FOR NEPAL!!!!!!!!!!!!
+#################CONTROLER FUNCTIONS FOR THE APP!!!!!!!!!!!!
 
 
 from __future__ import division
@@ -10,19 +10,16 @@ from django.contrib.auth.decorators import login_required
 from tethys_sdk.gizmos import *
 from django.http import HttpResponse, JsonResponse
 import os
-import requests
 import netCDF4 as nc
 import datetime as dt
 import numpy as np
 import plotly.graph_objs as go
 import datetime
-import xarray
-import ast
 from csv import writer as csv_writer
 from .app import NepalHiwatviewer as app
 from config import *
 from utils import generate_variables_meta,get_thredds_info,get_hiwat_file
-#from hiwat import det_time_options,hourly_time_options
+
 @login_required()
 def home(request):
     """
@@ -48,32 +45,20 @@ Controller for the app home page.
                                   options=variable_options,
                                   initial=['Total Accumulated Precipitation(mm)'])
 
-    # geoserver_wms_url = geoserver["wms_url"]
 
     thredds_wms_obj = get_thredds_info()
 
     var_options = generate_variables_meta()
-   # print('printing the var_options from the controllers')
-    #print(type(var_options))
-
-    #hiwat_files = get_hiwat_file()
-
-    #det_options = det_time_options(hiwat_files['det'], 'det')
-
-    #hourly_options = hourly_time_options(hiwat_files['hourly'], 'hourly')
 
     context = {
         'select_variable':select_variable,
-        # 'geoserver_wms_url':geoserver_wms_url,
         'thredds_urls':json.dumps(thredds_wms_obj),
         'var_options':json.dumps(var_options),
-   #     'det_options':json.dumps(det_options),
-    #    'hourly_options':json.dumps(hourly_options)
     }
 
     return render(request, 'nepal_hiwatviewer/home.html',context)
 
-
+# FUNCTION TO GIVE THE FORECAST DATA FOR THE GIVEN RIVER
 def get_hiwat(request):
     print("enter get hiwat function ..")
     """
@@ -89,29 +74,23 @@ def get_hiwat(request):
         model = 'Hiwat'
 
         print(comid, country, model,startdate)
-        dir_base = os.path.dirname(__file__)
-        ##path = os.path.join(dir_base, 'public/Data')
         path = os.path.join(app.get_custom_setting('forescast_data'))
-
+        print('printing the path in the get hiwat function')
+        print(path)
         filename = [f for f in os.listdir(path) if 'Qout_hiwat' in f]
         filename.reverse()
         print("printing filename")
         print (filename)
         print("starting reverse. ..")
 
-        print(filename[0])
-        print(filename[1])
-        print(filename[2])
-        print(filename[3])
+        for file in filename:
+            print(file)
 
-        ##adddition ##
-        # if startdate=='start'
-        # 	startdate=filename[0]
+
+
         selectedDate=int(startdate)
         filename = filename[selectedDate]
 
-        #filename = filename[0]
-        # filename=startdate
 
         file = path + '/' + filename
 
@@ -146,10 +125,7 @@ def get_hiwat(request):
         max_value=max(values)
 
         return_shapes, return_annotations= get_return_period_ploty_info(request,min_date,max_date)
-        #return_shapes, return_annotations= get_return_period_ploty_info(request,dates[0],dates[-1])
-        # print(return_annotations)
-        # print("space")
-        # print(return_shapes)
+
         if return_shapes[2]["y0"]>max_value:
             return_shapes.pop(2)
             return_annotations.pop(2)
@@ -191,7 +167,7 @@ def get_hiwat(request):
         print str(e)
         return JsonResponse({'error': 'No HIWAT data found for the selected reach.'})
 
-
+# FUNCTION TO GIVE THE HISTORICAL DATA FROM THE GIVEN RIVER
 def get_historic(request):
     """
         Get historic data
@@ -204,8 +180,6 @@ def get_historic(request):
         country = 'Nepal'
         model = 'Historic ECMWF'
 
-        dir_base = os.path.dirname(__file__)
-        ##path = os.path.join(dir_base, 'public/Data')
         path = os.path.join(app.get_custom_setting('historical_data'))
 
         filename = [f for f in os.listdir(path) if 'Qout_erai' in f]
@@ -263,6 +237,7 @@ def get_historic(request):
         return JsonResponse({'error': 'No Historic ECMWF data found for the selected reach.'})
 
 
+#DOWNLOAD TEH FORECAST DATA FOR THE GIVEN RIVER
 def download_hiwat(request):
     """
         Get hiwat data
@@ -277,9 +252,7 @@ def download_hiwat(request):
         country = 'Nepal'
         model = 'Hiwat'
 
-        #dir_base = os.path.dirname(__file__)
-        #path = os.path.join(dir_base, 'public/Data')
-        ##added#
+
         path = os.path.join(app.get_custom_setting('forescast_data'))
 
         filename = [f for f in os.listdir(path) if 'Qout_hiwat' in f]
@@ -324,6 +297,7 @@ def download_hiwat(request):
         print str(e)
         return JsonResponse({'error': 'No HIWAT data found for the selected reach.'})
 
+#DOWNLOAD THE HISTORIC DATA FOR THE GIVEN RIVER.
 
 def download_historic(request):
     """
@@ -337,8 +311,7 @@ def download_historic(request):
         country = 'Nepal'
         model = 'Historic ECMWF'
 
-        #dir_base = os.path.dirname(__file__)
-        #path = os.path.join(dir_base, 'public/Data')
+
         path = os.path.join(app.get_custom_setting('historical_data'))
 
         filename = [f for f in os.listdir(path) if 'Qout_erai' in f]
@@ -379,17 +352,20 @@ def download_historic(request):
         print str(e)
         return JsonResponse({'error': 'No Historic ECMWF data found for the selected reach.'})
 
+# GET THE DATES ASSOCIATED WITH THE NAME OFTHE FORECAST FILES SAVED ON THE FORECAST LOCAL PATH
 def get_avaialable_dates_raw(request):
     get_data = request.GET
     comid = get_data['comid']
     path = os.path.join(app.get_custom_setting('forescast_data'))
+    print('printing path in get available dates raw')
+    print(path)
     filenames = [f for f in os.listdir(path) if 'Qout' in f]
+    print(type (filenames[0]))
     sorted(filenames)
     print("get_available_dates_raw ..")
-    print(filenames[0])
-    print(filenames[1])
-    print(filenames[2])
-    print(filenames[3])
+    for filename in filenames:
+        print(filename)
+
 
     availableDates = []
     files_count = 0
@@ -411,19 +387,17 @@ def get_avaialable_dates_raw(request):
             break
     print("printing availbale dates...")
     sorted(availableDates)
-    print(availableDates[0])
-    print(availableDates[1])
-    print(availableDates[2])
-    print(availableDates[3])
-    #availableDates.append(['Select Date', availableDates[-1][1]])
+    for dates in availableDates:
+        print(dates)
+
     availableDates.reverse()
 
     return JsonResponse({
         "success": "Data analysis complete!",
         "available_dates": json.dumps(availableDates)
     })
-    ##return JsonResponse(availableDates, safe=False)
 
+#FINAL DATES AVAILABLE FOR TEH FORECAST DATA FOR TEH RIVER. THIS USES THE GET_AVAILABLE_DATES_RAW FUNCTION.
 def get_availableDatesFinal(request):
     print("get_available_dates")
     print(request)
@@ -440,7 +414,6 @@ def get_availableDatesFinal(request):
             date_f = dt.datetime.strptime(date, '%Y%m%d.%H%M').strftime('%Y-%m-%d %H:%M')
         dates.append([date_f, date, comid])
 
-   # dates.append(['Select Date', dates[-1][1]])
     dates.reverse()
 
     return JsonResponse({
@@ -463,10 +436,10 @@ def get_return_periods_final(request):
 
         rpall=get_return_periods(request_params1)
 
-    # return eval(rpall.content)
     return rpall
 
-
+#GET THE RETURN PERIODS FROM THE GET_RETURN_PERIOD_DICT FUNCTION AS A DICTIONARY OBJECT, THIS IS
+# BASICALLY A WRAPPER FUNCTION FOR THE GET RETURN PERIOD DICT
 def get_return_periods(request):
 # def get_return_periods(commid):
     print("entring get_return_periods")
@@ -476,21 +449,11 @@ def get_return_periods(request):
     return JsonResponse(get_return_period_dict(request), safe=False)
 
 
-
+#GET THE RETURN PERIOD AS A DICTIONARY OBJECT
 def get_return_period_dict(request):
-# def get_return_period_dict(commid):
 
-    """
-    Returns return period data as dictionary for a river ID in a watershed
-    """
-    #units = request.GET.get('units')
-    # return_period_file, river_id =\
-    #     validate_historical_data(request.GET,
-    #                              "return_period*.nc",
-    #                              "Return Period")[:2]'
     print("entering the return period_dict function ..")
     return_period_file, river_id = validate_historical_data(request)[:2]
-    # return_period_file, river_id = validate_historical_data(commid)[:2]
 
     print("printing return_period_file and river id ..")
     print(return_period_file)
@@ -498,24 +461,6 @@ def get_return_period_dict(request):
 
     # get information from dataset
     return_period_data = {}
-    #with rivid_exception_handler('return period', river_id):
-
-    # with xarray.open_dataset(return_period_file) \
-    # 			as return_period_nc:
-    # 		print("this is the get_retun_period_trial")
-    # 		print(return_period_nc)
-    # 		rpd = return_period_nc.rivid.sel(rivid=river_id)
-    # 		# if units == 'english':
-    # 		#     rpd['max_flow'] *= M3_TO_FT3
-    # 		#     rpd['return_period_20'] *= M3_TO_FT3
-    # 		#     rpd['return_period_10'] *= M3_TO_FT3
-    # 		#     rpd['return_period_2'] *= M3_TO_FT3
-    # 		print('printing the rpd')
-    # 		print(rpd)
-    # 		return_period_data["max"] = str(rpd.long_name)
-    # 		return_period_data["twenty"] = str(rpd.return_period_20.values)
-    # 		return_period_data["ten"] = str(rpd.return_period_10.values)
-    # 		return_period_data["two"] = str(rpd.return_period_2.values)
 
 
     res = nc.Dataset(return_period_file, 'r')
@@ -525,7 +470,6 @@ def get_return_period_dict(request):
     return_10=res.variables['return_period_10']
     return_2=res.variables['return_period_2']
     comids=res.variables['rivid'][:]
-    # hola=res.variables['max_flow('+str(river_id)+')']
     print('this is the max value of flowSS')
     print('maxflows size is ' + str(len(max_flows)))
     print(max_flows)
@@ -558,11 +502,9 @@ def get_return_period_dict(request):
 
     return return_period_data
 
-# def validate_historical_data(request_info, file_search_card="Qout*.nc",
-#                              dataset_name="ERA Interim"):
 
+#VALIDATE THE RETUNR PERIODS FROM THE ESPECIFIED PATH IN THE LOCAL FILE
 def validate_historical_data(request_info):
-# def validate_historical_data(commid):
 
     print("entering the validate_historical_data function ...")
     path_to_era_interim_data = app.get_custom_setting('return_periods')
@@ -575,30 +517,15 @@ def validate_historical_data(request_info):
                                 'Please check settings.')
 
 
-    # get information from request
-    # watershed_name, subbasin_name = validate_watershed_info(request_info)
+
 
     river_id = validate_rivid_info(request_info)
-    # river_id = commid
 
-    # find/check current output datasets
-    # path_to_output_files = \
-    #     os.path.join(path_to_era_interim_data,
-    #                  "{0}-{1}".format(watershed_name, subbasin_name))
-    # historical_data_files = glob(os.path.join(path_to_output_files,
-    #                                           file_search_card))
-    # if not historical_data_files:
-    #     raise Exception('{dataset_name} data for {watershed_name} '
-    #                         '({subbasin_name}).'
-    #                         .format(dataset_name=dataset_name,
-    #                                 watershed_name=watershed_name,
-    #                                 subbasin_name=subbasin_name))
     print("exiting the validate_historical_data function ..")
 
-    # return historical_data_files[0], river_id, watershed_name, subbasin_name
     return file, river_id
 
-
+#VALIDATE THE RIVER ID
 def validate_rivid_info(request_info):
     """
     This function validates the input rivid data for a request
@@ -608,8 +535,6 @@ def validate_rivid_info(request_info):
     rivid
     """
     print("enetering the validate_rivid_info fucntion")
-    #get_data = request_info.GET
-    #reach_id = get_data['reach_id']
 
     reach_id = request_info.get('reach_id')
     if reach_id is None:
@@ -627,7 +552,7 @@ def validate_rivid_info(request_info):
     return reach_id
 
 
-
+#EXCEPTION HANDLER FOR THE RIVER ID
 def rivid_exception_handler(file_type, river_id):
     """
     Raises proper exceptions for rivids queries
@@ -641,9 +566,9 @@ def rivid_exception_handler(file_type, river_id):
         raise Exception("Invalid {file_type} file ..."
                           .format(file_type=file_type))
 
-# def get_return_period_ploty_info(request, datetime_start, datetime_end,
-# 								 band_alt_max=-9999):
 
+
+#GET THE RETURN PERIOD COLORS FOR THE FORECAST AND HISTORICAL DATA
 def get_return_period_ploty_info(request, datetime_start, datetime_end,
                                   band_alt_max=-9999):
     """
@@ -767,34 +692,3 @@ def get_return_period_ploty_info(request, datetime_start, datetime_end,
     ]
     print("exiting the plotly function for return periods..")
     return shapes, annotations
-
-def getGeoJson():
-    request_params = dict(cty='nepalRiver')
-    request_headers = dict(Authorization='Token 93eae5155d3c551cd5d449e896cf707869b63eb2')
-    res = requests.get('http://tethys.icimod.org/apps/apicenter/hiwatAPI/getFeaturesHIWAT', params=request_params,headers=request_headers)
-    # print (res.text)
-    return(res.text)
-
-# def chartHiwat(request):
-#     return_obj = {}
-#     try:
-#     comid =int(request.GET.get('stID'))
-#     except:
-#     comid = 57465
-#     return_obj = getForecastData(comid)
-#     # print (return_obj)
-#     return HttpResponse(return_obj, content_type= 'application/json')
-#
-# def forecastpercent(request):
-#     if request.is_ajax() and request.method == 'GET':
-#     comid = request.GET.get('comid')
-#     return JsonResponse(get_forecastpercent(comid))
-
-def index(request):
-    getjson = getGeoJson()
-    # print(getjson)
-    context = {
-        'myJson': getjson
-    }
-    # return render(request, 'hiwatnepal/main.html', context)
-    return render(request, 'nepal_hiwatviewer/home.html', context)

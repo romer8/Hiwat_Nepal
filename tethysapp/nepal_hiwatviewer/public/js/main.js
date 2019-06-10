@@ -1,7 +1,8 @@
-
+//MAIN SCRIPT FOR THE APP
 
 let $loading = $('#view-file-loading');
 
+// THIS IS THE CODE FOR OPENLAYER IF YOU EVER WNAT TO SWICTH.
 //let base_layer = new ol.layer.Tile({
 //	source: new ol.source.BingMaps({
 //		key: 'eLVu8tDRPeQqmBlKAjcw~82nOqZJe2EpKmqd-kQrSmg~AocUZ43djJ-hMBHQdYDyMbT-Enfsk0mtUIGws1WeDuOvjY4EXCH-9OK3edNLDgkc',
@@ -75,41 +76,38 @@ init_opacity_slider;
 
 // inti the map//
 var map_leaft = L.map('showMapView').setView([27,86.77],7);
+
+//CREATE PANE TO NOT ACTIVATE THE RASTER WMS LAYER
 map_leaft.createPane('HiwatRaster');
 map_leaft.getPane('HiwatRaster').style.zIndex=650;
 map_leaft.getPane('HiwatRaster').style.pointerEvents='none';
+
+//ADD THE MAP FOR THE MAP FROM OPEN STREET LAYERS
 var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
      opacity: 0.5, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
      }).addTo(map_leaft);
 
-//var ecmwfAdmin = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
+//ADD THE BOUNDARY OF NEPAL
 var nepalBoundary = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
     layers:'nepal:nationalBoundary',
     format:'image/png',
     transparent: true
 }).addTo(map_leaft);
 
-//var ecmwfDist = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
+//INITIALIZE THE DISTRICTS OF NEPAL LAYER
 var nepalDistritos = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
     layers:'CRFMS:districtsNepal',
     format:'image/png',
     transparent: true
 });
 
-//var ecmwfProv = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
+//INITIALIZE THE NEPAL PROVINCES LAYER
 var nepalProv = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
     layers:'CRFMS:provinceNepal',
     format:'image/png',
     transparent: true
 });
 
-//**NORMAL INITILIZATION IN LEAFLET FOR THE GEOSERVER WMS SERVICE**//
-//var hiwatRiverColor =new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
-//    layers:'hydroviewer:rivernepal',
-//    format:'image/png',
-//    transparent:true,
-//    styles:'nepalHiresColor'
-//}).addTo(map_leaft);
 
 
 //**INITIALIZING THE WMS LAYERS THAT HAS THE RIVERS WITH COLORS*\\
@@ -122,15 +120,14 @@ var hiwatRiverColor= new L.tileLayer.betterWms(url, {
 }).addTo(map_leaft);
 
 
-
-
+//INITILIZING THE RIVER LAYER
 var hiwatRiver = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
    layers:'hydroviewer:rivernepal',
    format:'image/png',
    transparent: true
 });
 
-//** initializing the wms layer to show teh HIWAT data. I am using this random file to just initialize it
+//** initializing the wms layer to show the HIWAT data. I am using this random file to just initialize it
 //   you can see that it was not added to the map, so it is ok to use any to initialize//
 var hiwatWmsUrl = "https://tethys.servirglobal.net/thredds/wms/tethys/HIWAT/hkhControl_20180329-1800_latlon.nc";
 var wmsLayer = L.tileLayer.wms(hiwatWmsUrl, {
@@ -141,14 +138,17 @@ var wmsLayer = L.tileLayer.wms(hiwatWmsUrl, {
     opacity:0.2
 });
 
+//INITAILIZE A TIME DIMENTION FOR THE ANIMATION
 var timeDimension = new L.TimeDimension();
 map_leaft.timeDimension = timeDimension;
 
+//INITIALIZE A PLAYER FOR THE ANIMATION
 var player = new L.TimeDimension.Player({
     loop: true,
     startOver:true
 }, timeDimension);
 
+//INITIALIZE A OPTIONS FOR THE TIME DIMENSION CONTROL
 var timeDimensionControlOptions = {
     player: player,
     timeDimension: timeDimension,
@@ -161,6 +161,8 @@ var timeDimensionControlOptions = {
     loopButton:true,
     limitSliders:true
 };
+
+//INITIALIZE THE TIME DIMENTION CONTROL
 var timeDimensionControl = new L.Control.TimeDimension(timeDimensionControlOptions);
   $('#chkRaster').change(function(){
     if($(this).is(':checked')){
@@ -172,13 +174,14 @@ var timeDimensionControl = new L.Control.TimeDimension(timeDimensionControlOptio
    });
 tdWmsLayer = L.timeDimension.layer.wms(wmsLayer);
 
+// FUNCTION TO CLEAR COORDINATES//
 clear_coords = function(){
     $("#point-lat-lon").val('');
     $("#poly-lat-lon").val('');
     $("#shp-lat-lon").val('');
 };
 
-//init the coordinate tracker//
+//INITI THE COORDINATE TRACKING//
 init_events = function(){
     map_leaft.on("mousemove", function (event) {
         document.getElementById('mouse-position').innerHTML = 'Latitude:'+event.latlng.lat.toFixed(5)+', Longitude:'+event.latlng.lng.toFixed(5);
@@ -187,28 +190,18 @@ init_events = function(){
 
 
 
-// init the jquery variables//
+//INIT THE JQUERY VARIABLES//
 init_jquery_vars = function(){
     $slider = $("#slider");
     $sliderContainer = $("#slider-container");
     $modalChart = $("#chart-modal");
     $btnGetPlot = $("#btn-get-plot");
     var $meta_element = $("#metadata");
-//    gs_wms_url = $meta_element.attr('data-wms-url');
     var_options = $meta_element.attr('data-var-options');
-//    console.log('printing the var_option');
-//    console.log(typeof(var_options));
-//    console.log(var_options);
     var_options = JSON.parse(var_options);
-//    hourly_options = $meta_element.attr('data-hourly-options');
-//    hourly_options = JSON.parse(hourly_options);
-//    det_options = $meta_element.attr('data-det-options');
-//    det_options = JSON.parse(det_options);
     thredds_urls = $meta_element.attr('data-thredds-urls');
     thredds_urls = JSON.parse(thredds_urls);
     int_options = {'det':'Deterministic','hourly':'Ensemble Hourly'};
-//    int_options = {'det':'Deterministic','hourly':'Ensemble Hourly','day1':'Ensemble Day 1','day2':'Ensemble Day 2'};
-
 };
 
 // init the dropdown for the hiwat model.
@@ -244,6 +237,7 @@ init_all = function(){
 
 };
 
+// ADD A RASTER WMS LAYER THE MAP RELATED TO THE DATA OF HIWAT//
 add_wms = function(var_type,interval){
 
     var wmsUrl = thredds_urls[interval];
@@ -279,7 +273,6 @@ add_wms = function(var_type,interval){
                 setDefaultTime:true,
                 cache:48
             });
-            console.log('gg');
             console.log(tdWmsLayer);
             tdWmsLayer.addTo(map_leaft);
 
@@ -297,6 +290,9 @@ add_wms = function(var_type,interval){
 
 };
 
+
+// FIND TEH INDEX OF AN ITEM IN AN ARRAY//
+
 function find_var_index(item,data){
     var index = -1;
     for (var i = 0; i < data.length; ++i) {
@@ -308,15 +304,14 @@ function find_var_index(item,data){
     return index
 }
 
+//  FUNCTION THAT GETS ACTIVATED WHEN CHECKING TEH BOX FOR THE RASTER DATA.
 $(function() {
     $('#chkRaster').change(function(){
     if($(this).is(':checked')){
         $('#rasterOptions').show();
         init_all();
 
-        // thredds_urls.forEach(function(item,i){
-        // console.log(item,i);
-        // });
+
         $("#interval_table").html('');
         $.each(thredds_urls,function(n){
             var new_option = new Option(int_options[n],n);
@@ -325,7 +320,6 @@ $(function() {
                 $("#interval_table").append(new_option);
                 //      DEBUGGING COMMENTS
                 console.log('printing the new option');
-                console.log(typeof(new_option.value));
                 console.log(new_option.value);
             }
         });
@@ -358,7 +352,6 @@ $(function() {
                     if((new_option.value == 'enspmm-prec1h'||new_option.value == 'enspmm-prectot') || (new_option.value=='APCP_surface' || new_option.value=='PWAT_entireatmosphere')){
     //                    DEBUGGING COMMENTS
                         console.log('printing the new option');
-                        console.log(typeof(new_option));
                         console.log(new_option);
                         $("#var_table").append(new_option);
                     }
@@ -374,7 +367,6 @@ $(function() {
                 var var_type = ($("#var_table option:selected").val());
                 var interval_type = ($("#interval_table option:selected").val());
                 console.log(interval_type);
-                console.log(typeof interval_type);
                 add_wms(var_type,interval_type);
 
 
@@ -399,7 +391,7 @@ $(function() {
 
 });
 
-//******************************************************************************************************************************************//////////////
+// FUNCTION TO DISPLAY AMND COLOUR THE STREAMS ACCORDING TO THE RISKS//
 function getRisk(risk){
     if(risk == 4){
         return 'red'
@@ -415,7 +407,7 @@ function getRisk(risk){
     }
 }
 
-
+// SHOW THE STYLE OF THE STREAMS
 function streams_style(feature){
     if (feature.properties.risk < 1){
         return{
@@ -441,52 +433,7 @@ function streams_style(feature){
     }
 }
 
-//var not_trans_boundary=document.getElementById("preLoadNotTrans").value;
-//console.log(not_trans_boundary);
-//console.log(typeof(not_trans_boundary));
-//not_trans_boundary = JSON.parse(not_trans_boundary);
-
-
-//var ecmwfLayer = L.geoJson(ecmwf,
-//var not_trans_layer = L.geoJSON(not_trans_boundary,
-//    {style: streams_style,
-//    onEachFeature: function(feature, layer) {
-//        if (feature.properties && feature.properties.comid) {
-//            layer.on('click', function (e) {
-//                $.ajax({
-//                    type:"GET",
-//                    data: {
-//                        "stID": feature.properties.comid,
-//                    },
-//                    url:"chart",
-//                    dataType: 'json',
-//                    "beforeSend": function(xhr, settings) {
-//                        console.log("Before Send");
-//                        $.ajaxSettings.beforeSend(xhr, settings);
-//                    },
-//                    "success": function () {
-//                        alert("success");
-//                    }
-//                })
-//            }); //Layer on click
-//        }
-//    }
-//    }).addTo(map_leaft);
-
-//map_leaft.fitBounds(not_trans_layer.getBounds());
-//var legend = L.control({position: 'bottomleft'});
-//legend.onAdd = function (map_leaft) {
-//    var div = L.DomUtil.create('div','legend');
-//    var labels =["Twenty Year Return Period ","Ten Year Return Period ","Two Year Return Period ","Normal Drainage"];
-//    var grades = [4,3,2,1];
-//    div.innerHTML='<div><b>Legend</b></div>';
-//    for (var i=0; i < grades.length; i++){
-//        div.innerHTML += '<i style="background:' + getRisk(grades[i]) + '">&nbsp;&nbsp;</i>&nbsp;&nbsp;' + labels[i] + '<br/>';
-//    }
-//    return div;
-//}
-//legend.addTo(map_leaft);
-
+//DATA TO GET THE HIWAT DATA FOR A GIVEN STREAM
 
 function get_hiwat (comid,startdate) {
 	$('#hiwat-loading').removeClass('hidden');
@@ -545,6 +492,8 @@ function get_hiwat (comid,startdate) {
     });
 }
 
+// GET HISTORIC DATA FOR THE GIVEN STREAM
+
 function get_historic (comid) {
 
 	$('#historic-loading').removeClass('hidden');
@@ -564,7 +513,6 @@ function get_historic (comid) {
             if (!data.error) {
                 $('#historic-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');
-//                $('#obsdates').removeClass('hidden');
                 $loading.addClass('hidden');
                 $('#historic-chart').removeClass('hidden');
                 $('#historic-chart').html(data);
@@ -597,6 +545,7 @@ function get_historic (comid) {
         }
     });
 }
+//GET AVAILABLE DATES FORECAST FOR THE GIVEN STREAM
 function get_available_dates(comid) {
       console.log("entering get_available_dates_javascript");
        $.ajax({
@@ -632,8 +581,7 @@ function get_available_dates(comid) {
 
 }
 
-
-
+//GET TEH RETURN PERIODS FOR TEH GIVEN STREAM BASED ON THE 35-YEARS OLD HISTORICAL DATA//
 function get_return_periods(comid) {
     console.log('entering get_return_periods_function ..')
     $.ajax({
@@ -656,7 +604,6 @@ function get_return_periods(comid) {
         },
         success: function(data) {
             console.log(data);
-            console.log(typeof(data))
             $("#hiwat-chart").highcharts().yAxis[0].addPlotBand({
                 from: parseFloat(data.return_periods.twenty),
                 to: parseFloat(data.return_periods.max),
@@ -769,6 +716,7 @@ function get_return_periods(comid) {
 //	};
 //});
 
+//RESIZE GRAPHS
 function resize_graphs() {
     $("#hiwat_tab_link").click(function() {
         Plotly.Plots.resize($("#hiwat-chart .js-plotly-plot")[0]);

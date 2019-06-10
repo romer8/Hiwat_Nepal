@@ -1,3 +1,5 @@
+#MAIN APP PYTHON FILE FOR THE NEPALHIWATVIEWER APP
+
 from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.app_settings import CustomSetting
 
