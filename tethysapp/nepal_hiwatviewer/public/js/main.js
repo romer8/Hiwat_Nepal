@@ -88,21 +88,21 @@ var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{
      }).addTo(map_leaft);
 
 //ADD THE BOUNDARY OF NEPAL
-var nepalBoundary = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
+var nepalBoundary = new L.tileLayer.wms('https://tethys.icimod.org:8181/geoserver/ows',{
     layers:'nepal:nationalBoundary',
     format:'image/png',
     transparent: true
 }).addTo(map_leaft);
 
 //INITIALIZE THE DISTRICTS OF NEPAL LAYER
-var nepalDistritos = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
+var nepalDistritos = new L.tileLayer.wms('https://tethys.icimod.org:8181/geoserver/ows',{
     layers:'CRFMS:districtsNepal',
     format:'image/png',
     transparent: true
 });
 
 //INITIALIZE THE NEPAL PROVINCES LAYER
-var nepalProv = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows',{
+var nepalProv = new L.tileLayer.wms('https://tethys.icimod.org:8181/geoserver/ows',{
     layers:'CRFMS:provinceNepal',
     format:'image/png',
     transparent: true
@@ -111,7 +111,7 @@ var nepalProv = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ows
 
 
 //**INITIALIZING THE WMS LAYERS THAT HAS THE RIVERS WITH COLORS*\\
-var url = 'http://tethys.icimod.org:8181/geoserver/ows';
+var url = 'https://tethys.icimod.org:8181/geoserver/ows';
 var hiwatRiverColor= new L.tileLayer.betterWms(url, {
     layers: 'hydroviewer:rivernepal',
     transparent: true,

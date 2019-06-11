@@ -28,22 +28,26 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4930">
-              <caret line="290" column="14" selection-start-line="290" selection-start-column="14" selection-end-line="290" selection-end-column="14" />
+            <state relative-caret-position="3876">
+              <caret line="228" column="14" selection-start-line="228" selection-start-column="14" selection-end-line="228" selection-end-column="14" />
               <folding>
-                <element signature="e#4023#4042#0" expanded="true" />
-                <element signature="e#4323#4342#0" expanded="true" />
-                <element signature="e#4560#4613#0" expanded="true" />
-                <element signature="e#4635#4662#0" expanded="true" />
-                <element signature="e#4933#4954#0" expanded="true" />
                 <element signature="e#5845#5878#0" expanded="true" />
                 <element signature="e#6862#6869#1" expanded="true" />
                 <element signature="e#8213#8246#0" expanded="true" />
                 <element signature="e#10726#10733#1" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/main.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="90" column="45" selection-start-line="90" selection-start-column="45" selection-end-line="90" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -105,8 +109,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="277" />
-    <option name="y" value="201" />
+    <option name="x" value="276" />
+    <option name="y" value="200" />
     <option name="width" value="1415" />
     <option name="height" value="805" />
   </component>
@@ -231,9 +235,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.30093834" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.30093834" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -362,19 +365,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6655">
-          <caret line="243" column="27" lean-forward="true" selection-start-line="243" selection-start-column="27" selection-end-line="243" selection-end-column="27" />
-          <folding>
-            <marker date="1560200799868" expanded="false" signature="132:984" ph="..." />
-            <marker date="1560200799868" expanded="true" signature="1730:1750" ph="..." />
-            <marker date="1560200799868" expanded="false" signature="20127:20486" ph="..." />
-            <marker date="1560200799868" expanded="false" signature="20553:22759" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -415,19 +405,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4930">
-          <caret line="290" column="14" selection-start-line="290" selection-start-column="14" selection-end-line="290" selection-end-column="14" />
+        <state relative-caret-position="3876">
+          <caret line="228" column="14" selection-start-line="228" selection-start-column="14" selection-end-line="228" selection-end-column="14" />
           <folding>
-            <element signature="e#4023#4042#0" expanded="true" />
-            <element signature="e#4323#4342#0" expanded="true" />
-            <element signature="e#4560#4613#0" expanded="true" />
-            <element signature="e#4635#4662#0" expanded="true" />
-            <element signature="e#4933#4954#0" expanded="true" />
             <element signature="e#5845#5878#0" expanded="true" />
             <element signature="e#6862#6869#1" expanded="true" />
             <element signature="e#8213#8246#0" expanded="true" />
             <element signature="e#10726#10733#1" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="90" column="45" selection-start-line="90" selection-start-column="45" selection-end-line="90" selection-end-column="45" />
         </state>
       </provider>
     </entry>
