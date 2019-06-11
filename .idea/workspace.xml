@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="1cdb8b2a-4929-4466-a49e-94a45f81670c" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/tethysapp-nepal_hiwatviewer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tethysapp-nepal_hiwatviewer.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html" afterDir="false" />
-    </list>
+    <list default="true" id="1cdb8b2a-4929-4466-a49e-94a45f81670c" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +22,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/L.TileLayer.BetterWMS.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="648">
+            <state relative-caret-position="3026">
               <caret line="178" column="32" selection-start-line="178" selection-start-column="32" selection-end-line="178" selection-end-column="32" />
             </state>
           </provider>
@@ -37,7 +31,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
+            <state relative-caret-position="4930">
               <caret line="290" column="14" selection-start-line="290" selection-start-column="14" selection-end-line="290" selection-end-column="14" />
               <folding>
                 <element signature="e#4023#4042#0" expanded="true" />
@@ -111,9 +105,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="278" />
-    <option name="y" value="202" />
-    <option name="width" value="1414" />
+    <option name="x" value="277" />
+    <option name="y" value="201" />
+    <option name="width" value="1415" />
     <option name="height" value="805" />
   </component>
   <component name="ProjectView">
@@ -239,7 +233,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2969169" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.30093834" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -253,12 +247,12 @@
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info anchor="bottom" id="Python Console" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32959184" />
-      <window_info anchor="right" id="R Packages" />
-      <window_info anchor="right" id="R Graphics" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Data View" order="3" />
+      <window_info anchor="right" id="R Graphics" order="4" />
+      <window_info anchor="right" id="R Packages" order="5" />
     </layout>
   </component>
   <component name="UnknownFeatures">
@@ -414,14 +408,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/L.TileLayer.BetterWMS.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
+        <state relative-caret-position="3026">
           <caret line="178" column="32" selection-start-line="178" selection-start-column="32" selection-end-line="178" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
+        <state relative-caret-position="4930">
           <caret line="290" column="14" selection-start-line="290" selection-start-column="14" selection-end-line="290" selection-end-column="14" />
           <folding>
             <element signature="e#4023#4042#0" expanded="true" />

@@ -60,68 +60,6 @@
     </div>
      <label>
         Nepal Provinces
-    {% extends "nepal_hiwatviewer/base.html" %}
-{% load tethys_gizmos %}
-{% load staticfiles %}
-{% csrf_token %}
-{% load static %}
-{% block import_gizmos %}
-    {% import_gizmo_dependency plotly_view %}
-{% endblock %}
-
-{% block header_buttons %}
-  <!--<div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="View Graph">-->
-    <!--<a data-toggle="modal" data-target="#graph"><span class="glyphicon glyphicon-globe"></span></a>-->
-  <!--</div>-->
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
-    <a data-toggle="modal" data-target="#about"><span class="glyphicon glyphicon-question-sign"></span></a>
-  </div>
-{% endblock %}
-
-{% block app_navigation_items %}
-    <br>
-    <label>
-        HIWAT Data Raster
-    </label>
-    <P>Check the box to display the hourly/ assembly HIWAT data associated with the streams </P>
-    <div id="activateRaster" class="'RasterControl">
-        <li><input id="chkRaster" type="checkbox" value="Raster" ><label for="chkRaster">Raster</label></li>
-    </div>
-
-    <!--<br>-->
-    <div id="rasterOptions"class="rastersOptionClass" hidden>
-        <label>
-            Select a Interval Type
-        </label>
-        <select class="interval_table" name="interval_table" id="interval_table" style="width: 100%">
-            <option value="det">Deterministic</option>
-            <option value="hourly">Ensemble Hourly</option>
-        </select>
-        <br><br>
-        <label>
-            Select a Variable
-        </label>
-        <select class="var_table" name="var_table" id="var_table" style="width: 100%">
-
-        </select>
-
-        <br><br>
-        <b>Coordinates</b>
-        <div id="mouse-position" class="well well-sm"></div>
-        <label id="opacity-label" >Curent Opacity:&nbsp</label><span id="opacity" readonly style="border:0; color: #000000; font-weight:normal;"></span>
-        <div style="width:90%;left:5px;" id="opacity-slider"></div>
-        <br>
-        <div class="error"></div>
-        <b>Legend</b>
-        <div id="legend" class="info legend"></div>
-        <!--<div align="right"><canvas id="cv" width="200px" height="650px"></canvas></div>-->
-        <div id="metadata" style="display: none" data-thredds-urls="{{thredds_urls}}" data-var-options="{{var_options}}" data-hourly-options="{{hourly_options}}" data-det-options="{{det_options}}" data-wms-url="{{geoserver_wms_url}}"></div>
-        <input type="text" name="point-lat-lon" id="point-lat-lon" hidden>
-        <input type="text" name="poly-lat-lon" id="poly-lat-lon" hidden>
-        <input type="text" name="shp-lat-lon" id="shp-lat-lon" hidden>
-    </div>
-     <label>
-        Nepal Provinces
     </label>
     <P>Check the box to display the provinces of Nepal </P>
     <div id="activateProvince" class="ProvinceControl">
