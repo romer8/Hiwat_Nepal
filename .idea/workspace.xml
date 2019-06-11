@@ -28,11 +28,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="202" column="91" lean-forward="true" selection-start-line="202" selection-start-column="91" selection-end-line="202" selection-end-column="91" />
+            <state relative-caret-position="3026">
+              <caret line="202" column="28" selection-start-line="202" selection-start-column="28" selection-end-line="202" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -46,11 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2261">
-              <caret line="113" column="16" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="16" />
+            <state relative-caret-position="425">
+              <caret line="226" column="7" lean-forward="true" selection-start-line="226" selection-start-column="7" selection-end-line="226" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -108,8 +108,8 @@
         <option value="$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/app.py" />
         <option value="$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/css/leaflet.css" />
         <option value="$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/L.TileLayer.BetterWMS.js" />
-        <option value="$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/main.js" />
         <option value="$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html" />
+        <option value="$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/main.js" />
       </list>
     </option>
   </component>
@@ -240,7 +240,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.30495977" />
       <window_info id="Structure" order="1" weight="0.25" />
@@ -394,17 +393,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/main.js">
+    <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2261">
-          <caret line="113" column="16" selection-start-line="113" selection-start-column="16" selection-end-line="113" selection-end-column="16" />
+        <state relative-caret-position="3026">
+          <caret line="202" column="28" selection-start-line="202" selection-start-column="28" selection-end-line="202" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/templates/nepal_hiwatviewer/home.html">
+    <entry file="file://$PROJECT_DIR$/tethysapp/nepal_hiwatviewer/public/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="202" column="91" lean-forward="true" selection-start-line="202" selection-start-column="91" selection-end-line="202" selection-end-column="91" />
+        <state relative-caret-position="425">
+          <caret line="226" column="7" lean-forward="true" selection-start-line="226" selection-start-column="7" selection-end-line="226" selection-end-column="7" />
         </state>
       </provider>
     </entry>
