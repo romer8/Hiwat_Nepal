@@ -102,8 +102,13 @@ def get_hiwat(request):
         for d in dates_raw:
             dates.append(dt.datetime.fromtimestamp(d))
 
+        print('after append')
         comid_list = res.variables['rivid'][:]
-        comid_index = int(np.where(comid_list == int(comid))[0])
+        print('after commid list')
+        index_string=np.where(comid_list == int(comid))[0]
+        print('after index_string')
+        comid_index = int(index_string)
+        print('after comid_index')
 
         values = []
         for l in list(res.variables['Qout'][:]):

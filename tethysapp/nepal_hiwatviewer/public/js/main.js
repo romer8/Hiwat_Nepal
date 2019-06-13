@@ -129,7 +129,7 @@ var hiwatRiver = new L.tileLayer.wms('http://tethys.icimod.org:8181/geoserver/ow
 
 //** initializing the wms layer to show the HIWAT data. I am using this random file to just initialize it
 //   you can see that it was not added to the map, so it is ok to use any to initialize//
-var hiwatWmsUrl = "http://tethys.servirglobal.net/thredds/wms/tethys/HIWAT/hkhControl_20180329-1800_latlon.nc";
+var hiwatWmsUrl = "https://tethys.servirglobal.net/thredds/wms/tethys/HIWAT/hkhControl_20180329-1800_latlon.nc";
 var wmsLayer = L.tileLayer.wms(hiwatWmsUrl, {
     layers: 'APCP_surface',
     format: 'image/png',
@@ -380,12 +380,19 @@ $(function() {
 
         });
     }
-     else
+     else{
         $('#rasterOptions').hide();
+        map_leaft.removeLayer(tdWmsLayer);
+
+     }
     }),
       $('#chkProvince').change(function(){
         if($(this).is(':checked')){
             map_leaft.addLayer(nepalProv);
+        }
+        else{
+            map_leaft.removeLayer(nepalProv);
+
         }
       })
 
