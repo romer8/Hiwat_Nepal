@@ -113,7 +113,8 @@ def get_hiwat(request):
         comid_index_solution = index_string[0]
         print('printing commid index solution')
         print(type(comid_index_solution))
-        comid_index = comid_index_solution.astype(int)
+        comid_index = int(comid_index_solution)
+        # comid_index = comid_index_solution.astype(int)
         print('after comid_index')
 
         values = []
