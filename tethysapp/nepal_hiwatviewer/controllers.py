@@ -106,9 +106,14 @@ def get_hiwat(request):
         comid_list = res.variables['rivid'][:]
         print('after commid list')
         index_string=np.where(comid_list == int(comid))[0]
+        print('type of index_string')
+        print(type(index_string))
         print('after index_string')
         # comid_index = int(index_string)
-        comid_index = index_string[0].astype(int)
+        comid_index_solution = index_string[0]
+        print('printing commid index solution')
+        print(type(comid_index_solution))
+        comid_index = comid_index_solution.astype(int)
         print('after comid_index')
 
         values = []
