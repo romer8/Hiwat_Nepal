@@ -107,7 +107,8 @@ def get_hiwat(request):
         print('after commid list')
         index_string=np.where(comid_list == int(comid))[0]
         print('after index_string')
-        comid_index = int(index_string)
+        # comid_index = int(index_string)
+        comid_index = index_string[0].astype(int)
         print('after comid_index')
 
         values = []
