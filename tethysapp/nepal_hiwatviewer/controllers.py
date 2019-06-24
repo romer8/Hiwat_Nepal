@@ -105,16 +105,16 @@ def get_hiwat(request):
         print('after append')
         comid_list = res.variables['rivid'][:]
         print('after commid list')
-        index_string=np.where(comid_list == int(comid))[0]
+        commid = int(comid)
+        index_string = np.where(comid_list == commid)[0]
+        print(np.shape(index_string))
+        print('error is happening here')
         print('type of index_string')
         print(type(index_string))
         print('after index_string')
-        # comid_index = int(index_string)
-        comid_index_solution = index_string[0]
-        print('printing commid index solution')
-        print(type(comid_index_solution))
-        comid_index = int(comid_index_solution)
-        # comid_index = comid_index_solution.astype(int)
+        print(index_string)
+        print('new')
+        comid_index = index_string.item(0)
         print('after comid_index')
 
         values = []
