@@ -452,6 +452,8 @@ function get_hiwat (comid,startdate) {
             'startdate': startdate
         },
         error: function () {
+            console.log('printing the error in the function');
+
             $('#info').html('<p class="alert alert-danger" style="text-align: center"><strong>An unknown error occurred while retrieving the data</strong></p>');
             $('#info').removeClass('hidden');
 
@@ -460,6 +462,8 @@ function get_hiwat (comid,startdate) {
             }, 5000);
         },
         success: function (data) {
+            console.log('printing the data in the success');
+            console.log(data);
             if (!data.error) {
                 $('#hiwat-loading').addClass('hidden');
                 $('#dates').removeClass('hidden');

@@ -9,3 +9,4 @@ THREDDS_wms = 'https://tethys.servirglobal.net/thredds/wms/'
 #HIWAT STORAGE PATH
 HIWAT_storage = '/home/student/DataHiwat_Nepal/hiwat_data/'
 
+ROOT_OUTPUT_DIR= ''

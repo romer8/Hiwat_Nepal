@@ -17,8 +17,9 @@ import plotly.graph_objs as go
 import datetime
 from csv import writer as csv_writer
 from .app import NepalHiwatviewer as app
-from config import *
-from utils import generate_variables_meta,get_thredds_info,get_hiwat_file
+from .config import *
+from .utils import generate_variables_meta,get_thredds_info,get_hiwat_file
+base_name = __package__.split('.')[-1]
 
 @login_required()
 def home(request):
@@ -135,6 +136,8 @@ def get_hiwat(request):
         max_date=max(dates)
         min_date=min(dates)
         max_value=max(values)
+        print('THIS IS THE VALUES')
+        print(values)
 
         return_shapes, return_annotations= get_return_period_ploty_info(request,min_date,max_date)
 
@@ -173,10 +176,12 @@ def get_hiwat(request):
             'gizmo_object': chart_obj,
         }
 
-        return render(request, 'hydroviewer_hiwat/gizmo_ajax.html', context)
+        print('this is the chart_obj')
+        print(chart_obj)
+        return render(request, '{0}/gizmo_ajax.html'.format(base_name), context)
 
     except Exception as e:
-        print str(e)
+        print (e)
         return JsonResponse({'error': 'No HIWAT data found for the selected reach.'})
 
 # FUNCTION TO GIVE THE HISTORICAL DATA FROM THE GIVEN RIVER
@@ -242,10 +247,10 @@ def get_historic(request):
             'gizmo_object': chart_obj,
         }
 
-        return render(request, 'nepal_hiwatviewer/gizmo_ajax.html', context)
+        return render(request, '{0}/gizmo_ajax.html'.format(base_name), context)
 
     except Exception as e:
-        print str(e)
+        print (e)
         return JsonResponse({'error': 'No Historic ECMWF data found for the selected reach.'})
 
 
@@ -306,7 +311,7 @@ def download_hiwat(request):
         return response
 
     except Exception as e:
-        print str(e)
+        print (e)
         return JsonResponse({'error': 'No HIWAT data found for the selected reach.'})
 
 #DOWNLOAD THE HISTORIC DATA FOR THE GIVEN RIVER.
@@ -361,7 +366,7 @@ def download_historic(request):
         return response
 
     except Exception as e:
-        print str(e)
+        print (e)
         return JsonResponse({'error': 'No Historic ECMWF data found for the selected reach.'})
 
 # GET THE DATES ASSOCIATED WITH THE NAME OFTHE FORECAST FILES SAVED ON THE FORECAST LOCAL PATH

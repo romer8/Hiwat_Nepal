@@ -2,7 +2,7 @@ import datetime
 import os
 import requests
 
-from config import *
+from .config import *
 import numpy as np
 
 import xml.etree.ElementTree as ET
@@ -19,7 +19,7 @@ def generate_variables_meta():
         f.readline()  # Skip first line
 
         lines = f.readlines()
-
+    print("flag_1")
     for line in lines:
         if line != '':
             line = line.strip()
