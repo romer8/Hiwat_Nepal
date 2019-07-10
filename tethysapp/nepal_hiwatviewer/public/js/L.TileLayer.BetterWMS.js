@@ -120,7 +120,10 @@ L.TileLayer.BetterWMS = L.TileLayer.WMS.extend({
                       console.log(sel_val);
                       var startdate = indexString;
                       $loading.removeClass('hidden');
+//                      if (startdate != 'Select Date:'){
                       get_hiwat(comid, startdate);
+//                      }
+
                   });
 
 

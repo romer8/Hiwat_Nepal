@@ -10,3 +10,7 @@ THREDDS_wms = 'https://tethys.servirglobal.net/thredds/wms/'
 HIWAT_storage = '/home/student/DataHiwat_Nepal/hiwat_data/'
 
 ROOT_OUTPUT_DIR= ''
+
+#THREDDS FOR THE RAPID OUTPUT
+RapidOutput_CATALOG='https://tethys.servirglobal.net/thredds/'
+RapidOutput_FILE='tethys/WRF/RAPID_OUTPUT/Nepal/'

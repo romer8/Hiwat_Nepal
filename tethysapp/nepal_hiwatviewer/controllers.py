@@ -19,7 +19,16 @@ from csv import writer as csv_writer
 from .app import NepalHiwatviewer as app
 from .config import *
 from .utils import generate_variables_meta,get_thredds_info,get_hiwat_file
+from xml.dom import minidom
+from urllib.request import urlopen
+from urllib.request import urlretrieve
+from .config import RapidOutput_CATALOG,RapidOutput_FILE
+import ssl
+import shutil
+
+
 base_name = __package__.split('.')[-1]
+
 
 @login_required()
 def home(request):
@@ -56,8 +65,111 @@ Controller for the app home page.
         'thredds_urls':json.dumps(thredds_wms_obj),
         'var_options':json.dumps(var_options),
     }
+    ssl._create_default_https_context = ssl._create_unverified_context
+
+
+    print('check download')
+    donwloadRapid()
+    # donwloadRapidSave()
 
     return render(request, 'nepal_hiwatviewer/home.html',context)
+
+
+def get_elements(url, tag_name, attribute_name):
+    """Get elements from an XML file"""
+    # usock = urllib2.urlopen(url)
+    usock = urlopen(url)
+    print(usock)
+    xmldoc = minidom.parse(usock)
+    usock.close()
+    tags = xmldoc.getElementsByTagName(tag_name)
+    attributes = []
+    for tag in tags:
+        attribute = tag.getAttribute(attribute_name)
+        attributes.append(attribute)
+    return attributes
+
+
+
+def donwloadRapid():
+  #ERASE THE CONTENT FO THE FOLDER 'FORECAST'
+  eraseDirectory()
+
+  #DOWNLOAD THE CONTENT
+  url = RapidOutput_CATALOG+ RapidOutput_FILE+ 'catalog.xml'
+  print(url)
+  catalog = get_elements(url,'dataset','urlPath')
+  print(catalog)
+  files=[]
+  for citem in catalog:
+    if (citem[-3:]=='.nc'):
+      files.append(citem)
+  count = 0
+  for f in files:
+    count +=1
+    if count > 10:
+        break
+    file_url = RapidOutput_CATALOG + 'fileServer/' + f
+    file_prefix = file_url.split('/')[-1][:-3]
+    file_name = file_prefix + '_' + str(count) + '.nc'
+    print('Downloaing file %d of %d' % (count,len(files)))
+    print(file_name)
+    pathToSave = os.path.join(app.get_app_workspace().path, 'forecast')
+    pathToSave=os.path.join(pathToSave,file_name)
+    print(pathToSave)
+    a = urlretrieve(file_url,pathToSave)
+
+
+    print(a)
+
+def donwloadRapidSave():
+  #ERASE THE CONTENT FO THE FOLDER 'FORECAST'
+
+  #DOWNLOAD THE CONTENT
+  url = RapidOutput_CATALOG+ RapidOutput_FILE+ 'catalog.xml'
+  print(url)
+  catalog = get_elements(url,'dataset','urlPath')
+  print(catalog)
+  files=[]
+  for citem in catalog:
+    if (citem[-3:]=='.nc'):
+      files.append(citem)
+  count = 0
+  for f in files:
+    count +=1
+    if count > 70:
+        break
+    file_url = RapidOutput_CATALOG + 'fileServer/' + f
+    file_prefix = file_url.split('/')[-1][:-3]
+    file_name = file_prefix + '_' + str(count) + '.nc'
+    print('Downloaing file %d of %d' % (count,len(files)))
+    print(file_name)
+    pathToSave = '/Volumes/FILES/Test/HIWAT/Nepal'
+    pathToSave=os.path.join(pathToSave, file_name)
+    print(pathToSave)
+    a = urlretrieve(file_url,pathToSave)
+
+
+    print(a)
+
+
+
+
+def eraseDirectory():
+    folder= os.path.join(app.get_app_workspace().path, 'forecast')
+    count=0
+    for the_file in os.listdir(folder):
+        count+=1
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                print('Deleting file %d of %d' % (count, len(os.listdir(folder))+count-1))
+                os.unlink(file_path)
+            # UNCOMMENT FOR SUBDIRECTORIES
+            # elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception as e:
+            print(e)
+
 
 # FUNCTION TO GIVE THE FORECAST DATA FOR THE GIVEN RIVER
 def get_hiwat(request):
@@ -75,7 +187,10 @@ def get_hiwat(request):
         model = 'Hiwat'
 
         print(comid, country, model,startdate)
-        path = os.path.join(app.get_custom_setting('forescast_data'))
+        # path = os.path.join(app.get_custom_setting('forescast_data'))
+        #Added to read from the THREDDS SERVER
+        path=os.path.join(app.get_app_workspace().path, 'forecast')
+
         print('printing the path in the get hiwat function')
         print(path)
         filename = [f for f in os.listdir(path) if 'Qout_hiwat' in f]
@@ -197,8 +312,9 @@ def get_historic(request):
         country = 'Nepal'
         model = 'Historic ECMWF'
 
-        path = os.path.join(app.get_custom_setting('historical_data'))
-
+        # path = os.path.join(app.get_custom_setting('historical_data'))
+        #Added for the THREEDS SERVER of servirce
+        path=os.path.join(app.get_app_workspace().path,'historical')
         filename = [f for f in os.listdir(path) if 'Qout_erai' in f]
 
 
@@ -270,7 +386,9 @@ def download_hiwat(request):
         model = 'Hiwat'
 
 
-        path = os.path.join(app.get_custom_setting('forescast_data'))
+        # path = os.path.join(app.get_custom_setting('forescast_data'))
+        #Added for the THREEDS SERVER
+        path=os.path.join(app.get_app_workspace().path,'forecast')
 
         filename = [f for f in os.listdir(path) if 'Qout_hiwat' in f]
         filename.reverse()
@@ -329,7 +447,9 @@ def download_historic(request):
         model = 'Historic ECMWF'
 
 
-        path = os.path.join(app.get_custom_setting('historical_data'))
+        # path = os.path.join(app.get_custom_setting('historical_data'))
+        # Added for the THREEDS SERVER
+        path = os.path.join(app.get_app_workspace().path, 'historical')
 
         filename = [f for f in os.listdir(path) if 'Qout_erai' in f]
         filename = filename[0]
@@ -373,7 +493,11 @@ def download_historic(request):
 def get_avaialable_dates_raw(request):
     get_data = request.GET
     comid = get_data['comid']
-    path = os.path.join(app.get_custom_setting('forescast_data'))
+    # path = os.path.join(app.get_custom_setting('forescast_data'))
+
+    # Added for the THREEDS SERVER
+    path = os.path.join(app.get_app_workspace().path, 'forecast')
+
     print('printing path in get available dates raw')
     print(path)
     filenames = [f for f in os.listdir(path) if 'Qout' in f]
@@ -385,29 +509,49 @@ def get_avaialable_dates_raw(request):
 
 
     availableDates = []
+    preAvailableDates=[]
     files_count = 0
     for filename in filenames:
         ##filename = path + '/' + filename
-        filecut=filename.split("_")[5]
-        filecut2=filecut.split(".")[0]
-        filecut2=filecut2[:8]
-        date = datetime.datetime.strptime(filecut2, "%Y%m%d")
+        filecut = filename.split("_")[5]
+        print('this is teh filecut')
+        print(filecut)
+        filecut2 = filecut.split(".")[0]
+        print('this is the filecut2')
+        print(filecut2)
+        filecut2 = filecut2[:8]
+        print('this is the filecut2 de nuevo')
+        print(filecut2)
+
+        preAvailableDates.append(filecut2)
+        files_count += 1
+        # limit number of directories
+        if files_count > 10:
+            break
+
+    preAvailableDates.sort(key=int)
+    # availableDates.append('Select Date:')
+    preAvailableDates.reverse()
+    # DEBUGGING COMMENTS
+    # print('printing the dates before teh date command')
+    # for preAvailableDate in preAvailableDates:
+    #     print(type(preAvailableDate))
+    #     print(preAvailableDate)
+
+    for preAvailableDate in preAvailableDates:
+        date = datetime.datetime.strptime(preAvailableDate, "%Y%m%d")
+        print('this is the date')
         print(date)
         hour=0
         actualTimeDate=str(date + datetime.timedelta(hours=int(hour)))
         actualTimeDate=str(date)
-
         availableDates.append(actualTimeDate)
-        files_count += 1
-        # limit number of directories
-        if files_count > 64:
-            break
-    print("printing availbale dates...")
-    sorted(availableDates)
-    for dates in availableDates:
-        print(dates)
 
-    availableDates.reverse()
+
+    # DEBUGGING COMMENT
+    # print("printing availbale dates...")
+    # for dates in availableDates:
+    #     print(dates)
 
     return JsonResponse({
         "success": "Data analysis complete!",
@@ -524,7 +668,11 @@ def get_return_period_dict(request):
 def validate_historical_data(request_info):
 
     print("entering the validate_historical_data function ...")
-    path_to_era_interim_data = app.get_custom_setting('return_periods')
+    # path_to_era_interim_data = app.get_custom_setting('return_periods')
+
+    # Added for the THREEDS SERVER
+    path_to_era_interim_data = os.path.join(app.get_app_workspace().path, 'return_periods')
+
     filename = [f for f in os.listdir(path_to_era_interim_data) if 'return_periods_' in f]
     filename=filename[0]
     file = path_to_era_interim_data + '/' + filename
